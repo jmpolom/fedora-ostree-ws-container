@@ -1,0 +1,31 @@
+ARG variant=silverblue
+ARG release=38
+
+FROM quay.io/fedora-ostree-desktops/$variant:$release
+RUN rpm-ostree install \
+    age \
+    edk2-tools \
+    fd-find \
+    fish \
+    fzf \
+    git-credential-libsecret \
+    git-lfs \
+    htop \
+    kitty \
+    minicom \
+    neovim \
+    nss-tools \
+    p7zip \
+    python3-neovim \
+    qemu \
+    ripgrep \
+    screen \
+    seahorse \
+    setroubleshoot-server \
+    spice-gtk-tools \
+    swtpm \
+    tcpdump \
+    util-linux-user \
+    vulkan-tools \
+    wl-clipboard && \
+    ostree container commit

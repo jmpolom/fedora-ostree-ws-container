@@ -1,0 +1,17 @@
+ARG variant=silverblue
+ARG release=38
+
+FROM ghcr.io/jmpolom/fedora-$variant-ws:$release
+ARG release
+RUN curl -s -L https://nvidia.github.io/libnvidia-container/centos8/libnvidia-container.repo > /etc/yum.repos.d/libnvidia-container.repo && \
+    rpm-ostree install \
+    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
+    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
+    rpm-ostree install \
+    akmod-nvidia \
+    moby-engine \
+    nvidia-container-toolkit \
+    xorg-x11-drv-nvidia-cuda && \
+    sed -i 's/^#no-cgroups = false/no-cgroups = true/;' /etc/nvidia-container-runtime/config.toml && \
+    rm -rf /var/log && \
+    ostree container commit
