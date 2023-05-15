@@ -1,0 +1,57 @@
+name: Build and push ostree containers
+on:
+  schedule:
+    - cron: '0 19 * * 6'
+  push:
+    branches:
+      - 'main'
+permissions:
+  packages: write
+jobs:
+  build-push-base-image:
+    name: Build and push baseline workstation image
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+      - name: build base image
+        id: build-base-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: fedora-silverblue-ws
+          tags: 38 ${{ github.sha }}
+          containerfiles: ./Containerfile.workstation
+      - name: push base image
+        id: push-base-image
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-base-image.outputs.image }}
+          tags: ${{ steps.build-base-image.outputs.tags }}
+          registry: ghcr.io/${{ github.repository_owner }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+  build-push-nvidia-image:
+    name: Build and push nvidia workstation image
+    needs: build-push-base-image
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+      - name: build nvidia image
+        id: build-nvidia-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: fedora-silverblue-ws
+          tags: 38-nvidia ${{ github.sha }}-nvidia
+          containerfiles: ./Containerfile.nvidia
+      - name: push nvidia image
+        id: push-nvidia-image
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-nvidia-image.outputs.image }}
+          tags: ${{ steps.build-nvidia-image.outputs.tags }}
+          registry: ghcr.io/${{ github.repository_owner }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
