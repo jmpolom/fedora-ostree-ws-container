@@ -1,14 +1,28 @@
 ARG variant=silverblue
 ARG release=38
 
+FROM ghcr.io/jmpolom/fedora-$variant-ws:$release as kernel-query
+RUN rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' > /kernel-version.txt
+
+FROM quay.io/fedora/fedora:$release as kmod-build
+ARG release
+COPY --from=kernel-query /kernel-version.txt /kernel-version.txt
+RUN dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
+    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
+    dnf install -y kernel-$(< /kernel-version.txt) kernel-modules-$(< /kernel-version.txt) kernel-devel-$(< /kernel-version.txt) \
+    akmod-nvidia && \
+    mkdir /packages && cd /packages && rm -rf /var && akmodsbuild /usr/src/akmods/nvidia-kmod.latest
+
 FROM ghcr.io/jmpolom/fedora-$variant-ws:$release
 ARG release
+RUN mkdir /packages
+COPY --from=kmod-build /packages/* /packages
 RUN curl -s -L https://nvidia.github.io/libnvidia-container/centos8/libnvidia-container.repo > /etc/yum.repos.d/libnvidia-container.repo && \
     rpm-ostree install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
     rpm-ostree install \
-    akmod-nvidia \
+    /packages/* \
     moby-engine \
     nvidia-container-toolkit \
     xorg-x11-drv-nvidia-cuda && \
