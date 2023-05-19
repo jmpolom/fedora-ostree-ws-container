@@ -9,9 +9,15 @@ ARG release
 COPY --from=kernel-query /kernel-version.txt /kernel-version.txt
 RUN dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
-    dnf install -y kernel-$(< /kernel-version.txt) kernel-modules-$(< /kernel-version.txt) kernel-devel-$(< /kernel-version.txt) \
+    dnf install -y kernel-$(< /kernel-version.txt) \
+    kernel-modules-$(< /kernel-version.txt) \
+    kernel-devel-$(< /kernel-version.txt) \
     akmod-nvidia && \
-    mkdir /packages && cd /packages && rm -rf /var && akmodsbuild /usr/src/akmods/nvidia-kmod.latest
+    mkdir /packages && \
+    useradd -M builder && \
+    chown builder:builder /packages && \
+    cd /packages && \
+    runuser -u builder -- akmodsbuild -k $(< /kernel-version.txt) /usr/src/akmods/nvidia-kmod.latest
 
 FROM ghcr.io/jmpolom/fedora-$variant-ws:$release
 ARG release
@@ -27,5 +33,6 @@ RUN curl -s -L https://nvidia.github.io/libnvidia-container/centos8/libnvidia-co
     nvidia-container-toolkit \
     xorg-x11-drv-nvidia-cuda && \
     sed -i 's/^#no-cgroups = false/no-cgroups = true/;' /etc/nvidia-container-runtime/config.toml && \
-    rm -rf /var/log && \
+    echo 'blacklist nouveau' > /etc/modprobe.d/nouveau-blacklist.conf && \
+    rm -rf /packages && \
     ostree container commit
