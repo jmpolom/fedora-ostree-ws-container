@@ -1,5 +1,6 @@
 name: Build and push ostree containers
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 19 * * 6'
   push:
