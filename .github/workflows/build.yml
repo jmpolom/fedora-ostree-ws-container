@@ -9,13 +9,15 @@ on:
       - 'test'
       - 'stage'
       - 'next'
-permissions:
-  packages: write
 jobs:
   build-push-base-image:
     name: Build and push baseline workstation image
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
@@ -37,6 +39,8 @@ jobs:
           registry: ghcr.io/${{ github.repository_owner }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: cosign login (rh push-to-registry does not login)
+        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GITHUB_TOKEN }}
       - name: sign base container image with sigstore fulcio and github oidc
         run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-base-image.outputs.image }}@${{ steps.push-base-image.outputs.digest }}
   build-push-nvidia-image:
@@ -44,6 +48,10 @@ jobs:
     needs: build-push-base-image
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
@@ -65,5 +73,7 @@ jobs:
           registry: ghcr.io/${{ github.repository_owner }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: cosign login (rh push-to-registry does not login)
+        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GITHUB_TOKEN }}
       - name: sign nvidia container image with sigstore fulcio and github oidc
         run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-nvidia-image.outputs.image }}@${{ steps.push-nvidia-image.outputs.digest }}
