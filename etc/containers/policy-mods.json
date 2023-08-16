@@ -1,0 +1,30 @@
+{
+  "default": [
+    {
+      "type": "reject"
+    }
+  ],
+  "transports": {
+    "docker": {
+      "ghcr.io/jmpolom": [
+        {
+          "type": "sigstoreSigned",
+          "fulcio": {
+            "caPath": "/etc/pki/containers/fulcio.sigstore.dev.pub",
+            "oidcIssuer": "https://github.com/login/oauth",
+            "subjectEmail": "jon@subly.me"
+          },
+          "rekorPublicKeyPath": "/etc/pki/containers/rekor.sigstore.dev.pub",
+          "signedIdentity": {
+            "type": "matchRepository"
+          }
+        }
+      ],
+      "": [
+        {
+          "type": "insecureAcceptAnything"
+        }
+      ]
+        }
+    }
+}

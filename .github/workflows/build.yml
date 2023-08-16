@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - 'main'
+      - 'test'
+      - 'stage'
+      - 'next'
 permissions:
   packages: write
 jobs:
@@ -15,12 +18,14 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
+      - name: cosign-installer
+        uses: sigstore/cosign-installer@v3.1.1
       - name: build base image
         id: build-base-image
         uses: redhat-actions/buildah-build@v2
         with:
           image: fedora-silverblue-ws
-          tags: 38 ${{ github.sha }}
+          tags: 38-${{ github.ref_name }} ${{ github.sha }}
           containerfiles: ./Containerfile.workstation
       - name: push base image
         id: push-base-image
@@ -31,6 +36,8 @@ jobs:
           registry: ghcr.io/${{ github.repository_owner }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: sign base container image with sigstore fulcio and github oidc
+        run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-base-image.outputs.image }}@${{ steps.push-base-image.outputs.digest }}
   build-push-nvidia-image:
     name: Build and push nvidia workstation image
     needs: build-push-base-image
@@ -39,12 +46,14 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
+      - name: cosign-installer
+        uses: sigstore/cosign-installer@v3.1.1
       - name: build nvidia image
         id: build-nvidia-image
         uses: redhat-actions/buildah-build@v2
         with:
           image: fedora-silverblue-ws
-          tags: 38-nvidia ${{ github.sha }}-nvidia
+          tags: 38-nvidia-${{ github.ref_name }} ${{ github.sha }}-nvidia
           containerfiles: ./Containerfile.nvidia
       - name: push nvidia image
         id: push-nvidia-image
@@ -55,3 +64,5 @@ jobs:
           registry: ghcr.io/${{ github.repository_owner }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: sign nvidia container image with sigstore fulcio and github oidc
+        run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-nvidia-image.outputs.image }}@${{ steps.push-nvidia-image.outputs.digest }}

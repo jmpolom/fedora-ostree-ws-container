@@ -2,6 +2,8 @@ ARG variant=silverblue
 ARG release=38
 
 FROM quay.io/fedora-ostree-desktops/$variant:$release
+COPY etc/containers/ /etc/containers/
+COPY usr/bin/ /usr/bin/
 RUN rpm-ostree install \
     age \
     edk2-tools \
@@ -28,4 +30,6 @@ RUN rpm-ostree install \
     util-linux-user \
     vulkan-tools \
     wl-clipboard && \
+    /usr/bin/update-sigstore-certs.sh && \
+    /usr/bin/update-containers-policy.sh && \
     ostree container commit
