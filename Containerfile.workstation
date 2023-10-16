@@ -17,6 +17,7 @@ RUN rpm-ostree install \
     minicom \
     neovim \
     nss-tools \
+    nvme-cli \
     p7zip \
     python3-neovim \
     qemu \
@@ -32,4 +33,14 @@ RUN rpm-ostree install \
     wl-clipboard && \
     /usr/bin/update-sigstore-certs.sh && \
     /usr/bin/update-containers-policy.sh && \
+    rpm-ostree override remove \
+    fedora-logos-httpd \
+    gnome-user-share \
+    httpd \
+    httpd-core \
+    httpd-filesystem \
+    httpd-tools \
+    mod_dnssd \
+    mod_http2 \
+    mod_lua && \
     ostree container commit
