@@ -12,6 +12,8 @@ RUN rpm-ostree install \
     fzf \
     git-credential-libsecret \
     git-lfs \
+    gnome-tweaks \
+    gnutls-utils \
     htop \
     kitty \
     minicom \
@@ -25,6 +27,7 @@ RUN rpm-ostree install \
     screen \
     seahorse \
     setroubleshoot-server \
+    solaar \
     spice-gtk-tools \
     swtpm \
     tcpdump \
