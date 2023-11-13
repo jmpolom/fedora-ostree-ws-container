@@ -13,7 +13,6 @@ RUN rpm-ostree install \
     git-credential-libsecret \
     git-lfs \
     gnome-tweaks \
-    gnutls-utils \
     htop \
     kitty \
     minicom \
