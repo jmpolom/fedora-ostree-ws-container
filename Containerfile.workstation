@@ -32,7 +32,8 @@ RUN rpm-ostree install \
     tcpdump \
     util-linux-user \
     vulkan-tools \
-    wl-clipboard && \
+    wl-clipboard \
+    xrandr && \
     /usr/bin/update-sigstore-certs.sh && \
     /usr/bin/update-containers-policy.sh && \
     rpm-ostree override remove \
