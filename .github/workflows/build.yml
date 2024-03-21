@@ -20,9 +20,9 @@ jobs:
       packages: write
     steps:
       - name: checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: cosign-installer
-        uses: sigstore/cosign-installer@v3.1.1
+        uses: sigstore/cosign-installer@v3.4.0
       - name: build base image
         id: build-base-image
         uses: redhat-actions/buildah-build@v2
@@ -54,9 +54,9 @@ jobs:
       packages: write
     steps:
       - name: checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: cosign-installer
-        uses: sigstore/cosign-installer@v3.1.1
+        uses: sigstore/cosign-installer@v3.4.0
       - name: build nvidia image
         id: build-nvidia-image
         uses: redhat-actions/buildah-build@v2
