@@ -3,12 +3,12 @@ ARG release=38
 
 FROM ghcr.io/jmpolom/fedora-$variant-ws:$release as kmod-build
 ARG release
-RUN rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' > /kernel-version.txt && \
+RUN kernel_version=$(rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}') && \
     rpm-ostree install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
     rpm-ostree install -y \
-    kernel-modules-$(< /kernel-version.txt) \
-    kernel-devel-$(< /kernel-version.txt) \
+    kernel-modules-${kernel_version} \
+    kernel-devel-${kernel_version} \
     akmod-nvidia && \
     ln -s /usr/bin/ld.bfd /usr/bin/ld && \
     mkdir -p /packages /var/tmp && \
@@ -16,7 +16,7 @@ RUN rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' > /kernel-versio
     chown builder:builder /packages && \
     chmod 777 /var/tmp
 USER builder
-RUN cd /packages && akmodsbuild -k $(< /kernel-version.txt) /usr/src/akmods/nvidia-kmod.latest
+RUN cd /packages && akmodsbuild -k ${kernel_version} /usr/src/akmods/nvidia-kmod.latest
 
 FROM ghcr.io/jmpolom/fedora-$variant-ws:$release
 ARG release
