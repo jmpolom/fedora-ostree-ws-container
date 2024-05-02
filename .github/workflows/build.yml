@@ -12,68 +12,17 @@ on:
 jobs:
   build-push-base-image:
     name: Build and push baseline workstation image
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
     permissions:
       contents: read
       id-token: write
       packages: write
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v4
-      - name: cosign-installer
-        uses: sigstore/cosign-installer@v3.4.0
-      - name: build base image
-        id: build-base-image
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: fedora-silverblue-ws
-          tags: 38-${{ github.ref_name }} ${{ github.sha }}
-          containerfiles: ./Containerfile.workstation
-      - name: push base image
-        id: push-base-image
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build-base-image.outputs.image }}
-          tags: ${{ steps.build-base-image.outputs.tags }}
-          registry: ghcr.io/${{ github.repository_owner }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: cosign login (rh push-to-registry does not login)
-        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GITHUB_TOKEN }}
-      - name: sign base container image with sigstore fulcio and github oidc
-        run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-base-image.outputs.image }}@${{ steps.push-base-image.outputs.digest }}
-  build-push-nvidia-image:
-    name: Build and push nvidia workstation image
-    needs: build-push-base-image
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    permissions:
-      contents: read
-      id-token: write
-      packages: write
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v4
-      - name: cosign-installer
-        uses: sigstore/cosign-installer@v3.4.0
-      - name: build nvidia image
-        id: build-nvidia-image
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: fedora-silverblue-ws
-          tags: 38-nvidia-${{ github.ref_name }} ${{ github.sha }}-nvidia
-          containerfiles: ./Containerfile.nvidia
-      - name: push nvidia image
-        id: push-nvidia-image
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build-nvidia-image.outputs.image }}
-          tags: ${{ steps.build-nvidia-image.outputs.tags }}
-          registry: ghcr.io/${{ github.repository_owner }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: cosign login (rh push-to-registry does not login)
-        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GITHUB_TOKEN }}
-      - name: sign nvidia container image with sigstore fulcio and github oidc
-        run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-nvidia-image.outputs.image }}@${{ steps.push-nvidia-image.outputs.digest }}
+    strategy:
+      matrix:
+        release-version:
+          - "38"
+          - "39"
+    uses: .github/workflows/build-push-all.yml@main
+    with:
+      release-version: ${{ matrix.version }}
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,50 @@
+on:
+  workflow_call:
+    inputs:
+      containerfile:
+        required: true
+        type: string
+      flavor:
+        required: true
+        type: string
+      release-version:
+        required: true
+        type: string
+    secrets:
+      github-token:
+        required: true
+jobs:
+  build-push-image:
+    name: Build and push ostree image
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: cosign-installer
+        uses: sigstore/cosign-installer@v3.4.0
+      - name: build image
+        id: build-base-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: fedora-silverblue-ws
+          tags: ${{ inputs.release-version }}-${{ inputs.flavor }}${{ inputs.flavor == "" && "" || "-" }}${{ github.ref_name }} ${{ github.sha }}
+          containerfiles: ${{ inputs.containerfile }}
+      - name: push image
+        id: push-base-image
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-base-image.outputs.image }}
+          tags: ${{ steps.build-base-image.outputs.tags }}
+          registry: ghcr.io/${{ github.repository_owner }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.github-token }}
+      - name: cosign login (rh push-to-registry does not login)
+        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.github-token }}
+      - name: sign base container image with sigstore fulcio and github oidc
+        run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-base-image.outputs.image }}@${{ steps.push-base-image.outputs.digest }}
+

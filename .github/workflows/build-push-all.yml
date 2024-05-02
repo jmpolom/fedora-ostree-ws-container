@@ -1,0 +1,27 @@
+on:
+  workflow_call:
+    inputs:
+      release-version:
+        required: true
+        type: string
+    secrets:
+      github-token:
+        required: true
+jobs:
+  build-push-base-image:
+    uses: .github/workflows/build-push.yml@main
+    with:
+      release-version: ${{ inputs.release-version }}
+      flavor: ""
+      containerfile: ./Containerfile.workstation
+    secrets:
+      github-token: ${{ secrets.github-token }}
+  build-push-nvidia-image:
+    uses: .github/workflows/build-push.yml@main
+    needs: build-push-base-image
+    with:
+      release-version: ${{ inputs.release-version }}
+      flavor: nvidia
+      containerfile: ./Containerfile.nvidia
+    secrets:
+      github-token: ${{ secrets.github-token }}
