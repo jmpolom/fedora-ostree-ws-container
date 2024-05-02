@@ -5,10 +5,10 @@ on:
     - cron: '0 19 * * 6'
   push:
     branches:
-      - 'main'
-      - 'test'
-      - 'stage'
-      - 'next'
+      - "main"
+      - "test"
+      - "stage"
+      - "next"
 jobs:
   build-push-base-image:
     name: Build and push baseline workstation image
