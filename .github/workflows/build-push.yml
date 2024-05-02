@@ -34,6 +34,8 @@ jobs:
           image: fedora-silverblue-ws
           tags: ${{ inputs.release-version }}-${{ inputs.flavor }}${{ inputs.flavor != '' && '-' || '' }}${{ github.ref_name }} ${{ github.sha }}
           containerfiles: ${{ inputs.containerfile }}
+          build-args: |
+            release=${{ inputs.release-version }}
       - name: push image
         id: push-base-image
         uses: redhat-actions/push-to-registry@v2
