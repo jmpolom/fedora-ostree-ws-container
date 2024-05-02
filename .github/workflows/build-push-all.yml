@@ -9,7 +9,7 @@ on:
         required: true
 jobs:
   build-push-base-image:
-    uses: ./.github/workflows/build-push.yml@main
+    uses: ./.github/workflows/build-push.yml
     with:
       release-version: ${{ inputs.release-version }}
       flavor: ""
@@ -17,7 +17,7 @@ jobs:
     secrets:
       github-token: ${{ secrets.github-token }}
   build-push-nvidia-image:
-    uses: ./.github/workflows/build-push.yml@main
+    uses: ./.github/workflows/build-push.yml
     needs: build-push-base-image
     with:
       release-version: ${{ inputs.release-version }}
