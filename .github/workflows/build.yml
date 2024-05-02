@@ -23,6 +23,6 @@ jobs:
           - "39"
     uses: ./.github/workflows/build-push-all.yml
     with:
-      release-version: ${{ matrix.version }}
+      release-version: ${{ matrix.release-version }}
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}

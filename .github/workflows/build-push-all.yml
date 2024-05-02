@@ -12,7 +12,7 @@ jobs:
     uses: ./.github/workflows/build-push.yml
     with:
       release-version: ${{ inputs.release-version }}
-      flavor: ""
+      flavor: ''
       containerfile: ./Containerfile.workstation
     secrets:
       github-token: ${{ secrets.github-token }}

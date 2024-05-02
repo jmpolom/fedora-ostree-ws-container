@@ -32,7 +32,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: fedora-silverblue-ws
-          tags: ${{ inputs.release-version }}-${{ inputs.flavor }}${{ inputs.flavor == '' && '' || '-' }}${{ github.ref_name }} ${{ github.sha }}
+          tags: ${{ inputs.release-version }}-${{ inputs.flavor }}${{ inputs.flavor != '' && '-' || '' }}${{ github.ref_name }} ${{ github.sha }}
           containerfiles: ${{ inputs.containerfile }}
       - name: push image
         id: push-base-image
