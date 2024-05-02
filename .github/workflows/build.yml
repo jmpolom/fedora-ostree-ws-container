@@ -21,7 +21,7 @@ jobs:
         release-version:
           - "38"
           - "39"
-    uses: .github/workflows/build-push-all.yml@main
+    uses: ./.github/workflows/build-push-all.yml@main
     with:
       release-version: ${{ matrix.version }}
     secrets:
