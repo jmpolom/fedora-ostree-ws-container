@@ -4,6 +4,9 @@ on:
       containerfile:
         required: true
         type: string
+      from_tag:
+        required: true
+        type: string
       release_version:
         required: true
         type: string
@@ -36,6 +39,7 @@ jobs:
           containerfiles: ${{ inputs.containerfile }}
           build-args: |
             release=${{ inputs.release_version }}
+            tag=${{ inputs.from_tag }}
       - name: push image
         id: push-base-image
         uses: redhat-actions/push-to-registry@v2

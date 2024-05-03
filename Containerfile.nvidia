@@ -1,7 +1,8 @@
-ARG variant=silverblue
 ARG release=38
+ARG tag=38-main
+ARG variant=silverblue
 
-FROM ghcr.io/jmpolom/fedora-$variant-ws:$release as kmod-build
+FROM ghcr.io/jmpolom/fedora-$variant-ws:$tag as kmod-build
 ARG release
 RUN rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' > /kernel-version.txt && \
     rpm-ostree install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \

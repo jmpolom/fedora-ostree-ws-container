@@ -12,6 +12,7 @@ jobs:
     uses: ./.github/workflows/build-push.yml
     with:
       containerfile: ./Containerfile.workstation
+      from_tag: ${{ inputs.release_version }}
       release_version: ${{ inputs.release_version }}
       tag_suffix: -${{ github.ref_name }}
     secrets:
@@ -21,7 +22,8 @@ jobs:
     needs: build-push-base-image
     with:
       containerfile: ./Containerfile.nvidia
-      release_version: ${{ inputs.release_version }}-${{ github.ref_name }}
+      from_tag: ${{ inputs.release_version }}-${{ github.ref_name }}
+      release_version: ${{ inputs.release_version }}
       tag_suffix: -nvidia
     secrets:
       actions_token: ${{ secrets.actions_token }}
