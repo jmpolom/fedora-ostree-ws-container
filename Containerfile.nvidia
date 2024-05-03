@@ -20,7 +20,7 @@ USER builder
 WORKDIR /packages
 RUN akmodsbuild -k "$(cat /kernel-version.txt)" /usr/src/akmods/nvidia-kmod.latest
 
-FROM ghcr.io/jmpolom/fedora-$variant-ws:$release
+FROM ghcr.io/jmpolom/fedora-$variant-ws:$tag
 ARG release
 RUN mkdir /packages
 COPY --from=kmod-build /packages/* /packages
