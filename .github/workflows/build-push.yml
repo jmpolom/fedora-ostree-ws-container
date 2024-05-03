@@ -4,14 +4,14 @@ on:
       containerfile:
         required: true
         type: string
-      flavor:
+      release_version:
         required: true
         type: string
-      release-version:
+      tag_suffix:
         required: true
         type: string
     secrets:
-      github-token:
+      github_token:
         required: true
 jobs:
   build-push-image:
@@ -32,10 +32,10 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: fedora-silverblue-ws
-          tags: ${{ inputs.release-version }}${{ inputs.flavor == 'nvidia' && '-nvidia' || '' }}-${{ github.ref_name }} ${{ github.sha }}
+          tags: ${{ inputs.release_version }}${{ inputs.tag_suffix }} ${{ github.sha }}${{ inputs.tag_suffix }}
           containerfiles: ${{ inputs.containerfile }}
           build-args: |
-            release=${{ inputs.release-version }}${{ inputs.flavor == 'nvidia' && github.ref_name || '' }}
+            release=${{ inputs.release_version }}${{ inputs.tag_suffix }}
       - name: push image
         id: push-base-image
         uses: redhat-actions/push-to-registry@v2
@@ -44,9 +44,8 @@ jobs:
           tags: ${{ steps.build-base-image.outputs.tags }}
           registry: ghcr.io/${{ github.repository_owner }}
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.github-token }}
+          password: ${{ secrets.github_token }}
       - name: cosign login (rh push-to-registry does not login)
-        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.github-token }}
+        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.github_token }}
       - name: sign base container image with sigstore fulcio and github oidc
         run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-base-image.outputs.image }}@${{ steps.push-base-image.outputs.digest }}
-

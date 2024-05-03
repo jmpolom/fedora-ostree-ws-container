@@ -18,11 +18,11 @@ jobs:
       packages: write
     strategy:
       matrix:
-        release-version:
+        release_version:
           - "38"
           - "39"
     uses: ./.github/workflows/build-push-all.yml
     with:
-      release-version: ${{ matrix.release-version }}
+      release_version: ${{ matrix.release_version }}
     secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+      github_token: ${{ secrets.GITHUB_TOKEN }}
