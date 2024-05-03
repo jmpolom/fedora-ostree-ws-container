@@ -11,7 +11,7 @@ on:
         required: true
         type: string
     secrets:
-      github_token:
+      actions_token:
         required: true
 jobs:
   build-push-image:
@@ -44,8 +44,8 @@ jobs:
           tags: ${{ steps.build-base-image.outputs.tags }}
           registry: ghcr.io/${{ github.repository_owner }}
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.github_token }}
+          password: ${{ secrets.actions_token }}
       - name: cosign login (rh push-to-registry does not login)
-        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.github_token }}
+        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.actions_token }}
       - name: sign base container image with sigstore fulcio and github oidc
         run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-base-image.outputs.image }}@${{ steps.push-base-image.outputs.digest }}

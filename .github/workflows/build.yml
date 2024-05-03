@@ -25,4 +25,4 @@ jobs:
     with:
       release_version: ${{ matrix.release_version }}
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      actions_token: ${{ secrets.GITHUB_TOKEN }}
