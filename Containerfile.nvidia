@@ -1,5 +1,5 @@
 ARG release=38
-ARG tag=38-main
+ARG tag=$release-main
 ARG variant=silverblue
 
 FROM ghcr.io/jmpolom/fedora-$variant-ws:$tag as kmod-build
@@ -23,13 +23,13 @@ RUN akmodsbuild -k "$(cat /kernel-version.txt)" /usr/src/akmods/nvidia-kmod.late
 FROM ghcr.io/jmpolom/fedora-$variant-ws:$tag
 ARG release
 RUN mkdir /packages
-COPY --from=kmod-build /packages/* /packages
+COPY --from=kmod-build /packages/*.rpm /packages
 RUN curl -s -L https://nvidia.github.io/libnvidia-container/centos8/libnvidia-container.repo > /etc/yum.repos.d/libnvidia-container.repo && \
     rpm-ostree install \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
     rpm-ostree install \
-    /packages/* \
+    /packages/*.rpm \
     moby-engine \
     nvidia-container-toolkit \
     xorg-x11-drv-nvidia-cuda && \
