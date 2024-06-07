@@ -7,6 +7,7 @@ COPY etc/containers/ /etc/containers/
 COPY usr/bin/ /usr/bin/
 RUN rpm-ostree install \
     age \
+    distrobox \
     edk2-tools \
     fd-find \
     fish \
@@ -14,6 +15,7 @@ RUN rpm-ostree install \
     git-credential-libsecret \
     git-lfs \
     gnome-tweaks \
+    hadolint \
     htop \
     kitty \
     minicom \
@@ -27,6 +29,8 @@ RUN rpm-ostree install \
     screen \
     seahorse \
     setroubleshoot-server \
+    shellcheck \
+    shfmt \
     solaar \
     spice-gtk-tools \
     swtpm \
@@ -47,5 +51,6 @@ RUN rpm-ostree install \
     httpd-tools \
     mod_dnssd \
     mod_http2 \
-    mod_lua && \
+    mod_lua \
+    toolbox && \
     ostree container commit
