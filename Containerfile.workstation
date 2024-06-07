@@ -29,7 +29,7 @@ RUN rpm-ostree install \
     screen \
     seahorse \
     setroubleshoot-server \
-    shellcheck \
+    ShellCheck \
     shfmt \
     solaar \
     spice-gtk-tools \
