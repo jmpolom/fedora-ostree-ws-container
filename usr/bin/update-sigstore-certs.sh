@@ -1,23 +1,23 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 set -eux
 
 # very much non standard; will this be a problem?
-CONTAINER_PKI_DIR="/etc/pki/containers"
+container_pki_dir="/etc/pki/containers"
 
 # Fulcio swagger docs: https://rekor.sigstore.dev/api/v1/log/publicKey
-FULCIO_CERT_URL="https://fulcio.sigstore.dev/api/v2/trustBundle"
+fulcio_cert_url="https://fulcio.sigstore.dev/api/v2/trustBundle"
 
 # Rekor swagger docs: https://rekor.sigstore.dev/api/v1/log/publicKey
-REKOR_PUBKEY_URL="https://rekor.sigstore.dev/api/v1/log/publicKey"
+rekor_pubkey_url="https://rekor.sigstore.dev/api/v1/log/publicKey"
 
-[[ -d "$CONTAINER_PKI_DIR" ]] || mkdir -p "$CONTAINER_PKI_DIR"
+[[ -d "$container_pki_dir" ]] || mkdir -p "$container_pki_dir"
 
-curl -L "$FULCIO_CERT_URL" | jq -j '.chains[].certificates | join("")' > \
-    "$CONTAINER_PKI_DIR"/fulcio.sigstore.dev.pub.tmp && \
-    mv "$CONTAINER_PKI_DIR"/fulcio.sigstore.dev.pub.tmp \
-    "$CONTAINER_PKI_DIR"/fulcio.sigstore.dev.pub && \
-    cat "$CONTAINER_PKI_DIR"/fulcio.sigstore.dev.pub
+curl -L "$fulcio_cert_url" | jq -j '.chains[].certificates | join("")' > \
+    "$container_pki_dir"/fulcio.sigstore.dev.pub.tmp && \
+    mv "$container_pki_dir"/fulcio.sigstore.dev.pub.tmp \
+    "$container_pki_dir"/fulcio.sigstore.dev.pub && \
+    cat "$container_pki_dir"/fulcio.sigstore.dev.pub
 
-curl -L -o "$CONTAINER_PKI_DIR"/rekor.sigstore.dev.pub "$REKOR_PUBKEY_URL" && \
-    cat "$CONTAINER_PKI_DIR"/rekor.sigstore.dev.pub
+curl -L -o "$container_pki_dir"/rekor.sigstore.dev.pub "$rekor_pubkey_url" && \
+    cat "$container_pki_dir"/rekor.sigstore.dev.pub

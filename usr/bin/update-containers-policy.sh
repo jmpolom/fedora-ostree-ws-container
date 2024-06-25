@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 set -eux
 
-CONTAINER_POLICY_DIR="/etc/containers"
+container_policy_dir="/etc/containers"
 
 jq -s 'reduce .[] as $x ({}; . * $x)' \
-    "$CONTAINER_POLICY_DIR"/policy.json \
-    "$CONTAINER_POLICY_DIR"/policy-mods.json | \
-    tee "$CONTAINER_POLICY_DIR"/policy.json.tmp && \
-    mv "$CONTAINER_POLICY_DIR"/policy.json.tmp "$CONTAINER_POLICY_DIR"/policy.json
+    "$container_policy_dir"/policy.json \
+    "$container_policy_dir"/policy-mods.json | \
+    tee "$container_policy_dir"/policy.json.tmp && \
+    mv "$container_policy_dir"/policy.json.tmp "$container_policy_dir"/policy.json
