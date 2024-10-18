@@ -18,6 +18,7 @@ RUN rpm-ostree install \
     hadolint \
     htop \
     kitty \
+    lua \
     minicom \
     neovim \
     nss-tools \
@@ -42,15 +43,4 @@ RUN rpm-ostree install \
     xrandr && \
     /usr/bin/update-sigstore-certs.sh && \
     /usr/bin/update-containers-policy.sh && \
-    rpm-ostree override remove \
-    fedora-logos-httpd \
-    gnome-user-share \
-    httpd \
-    httpd-core \
-    httpd-filesystem \
-    httpd-tools \
-    mod_dnssd \
-    mod_http2 \
-    mod_lua \
-    toolbox && \
     ostree container commit
