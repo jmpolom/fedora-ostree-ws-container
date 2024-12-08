@@ -19,8 +19,8 @@ jobs:
     strategy:
       matrix:
         release_version:
-          - "39"
           - "40"
+          - "41"
     uses: ./.github/workflows/build-push-all.yml
     with:
       release_version: ${{ matrix.release_version }}
