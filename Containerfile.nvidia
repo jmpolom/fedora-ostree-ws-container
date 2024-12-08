@@ -11,7 +11,8 @@ RUN rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' > /kernel-versio
     kernel-modules-"$(cat /kernel-version.txt)" \
     kernel-devel-"$(cat /kernel-version.txt)" \
     akmod-nvidia && \
-    ln -s /usr/bin/ld.bfd /usr/bin/ld && \
+    if [ ! -e "/usr/bin/ld" ]; then ln -s /usr/bin/ld.bfd /usr/bin/ld; fi && \
+    ls -alh /usr/bin/ld && \
     mkdir -p /packages /var/tmp && \
     useradd -M builder && \
     chown builder:builder /packages && \
