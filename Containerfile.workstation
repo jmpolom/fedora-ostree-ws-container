@@ -21,7 +21,6 @@ RUN rpm-ostree install \
     lua \
     minicom \
     neovim \
-    nss-tools \
     nvme-cli \
     p7zip \
     python3-neovim \
