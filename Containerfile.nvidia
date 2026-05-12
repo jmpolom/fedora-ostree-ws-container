@@ -11,10 +11,10 @@ RUN rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' > /kernel-versio
     rpm-ostree install -y \
     kernel-modules-"$(cat /kernel-version.txt)" \
     kernel-devel-"$(cat /kernel-version.txt)" \
-    akmod-nvidia && \
-    mkdir -p "/nvidia-kmod/{BUILD,SPECS,SOURCES,SRPMS,RPMS}/$(uname -m)"
+    akmod-nvidia
+RUN mkdir -p "/nvidia-kmod/{BUILD,SPECS,SOURCES,SRPMS,RPMS}/$(uname -m)"
 WORKDIR /usr/src/akmods
-RUN rpmbuild \
+RUN rpmbuild -vv \
     --define "_topdir     /nvidia-kmod/" \
     --define "_buildtree  /nvidia-kmod/BUILD" \
     --define "_specdir    /nvidia-kmod/SPECS" \
@@ -41,5 +41,4 @@ RUN curl -s -L https://nvidia.github.io/libnvidia-container/centos8/libnvidia-co
     xorg-x11-drv-nvidia-cuda && \
     sed -i 's/^#no-cgroups = false/no-cgroups = true/;' /etc/nvidia-container-runtime/config.toml && \
     echo 'blacklist nouveau' > /etc/modprobe.d/nouveau-blacklist.conf && \
-    rm -rf /nvidia-kmod && \
-    ostree container commit
+    rm -rf /nvidia-kmod
