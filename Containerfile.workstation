@@ -5,7 +5,7 @@ ARG variant=silverblue
 FROM quay.io/fedora-ostree-desktops/$variant:$tag
 COPY etc/containers/ /etc/containers/
 COPY usr/bin/ /usr/bin/
-RUN rpm-ostree install \
+RUN dnf install -y \
     age \
     distrobox \
     edk2-tools \
@@ -41,5 +41,4 @@ RUN rpm-ostree install \
     wl-clipboard \
     xrandr && \
     /usr/bin/update-sigstore-certs.sh && \
-    /usr/bin/update-containers-policy.sh && \
-    ostree container commit
+    /usr/bin/update-containers-policy.sh
