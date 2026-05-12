@@ -5,10 +5,10 @@ ARG variant=silverblue
 FROM ghcr.io/jmpolom/fedora-$variant-ws:$tag as kmod-build
 ARG release
 RUN rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' > /kernel-version.txt && \
-    rpm-ostree install -y \
+    dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
-    rpm-ostree install -y \
+    dnf install -y \
     kernel-modules-"$(cat /kernel-version.txt)" \
     kernel-devel-"$(cat /kernel-version.txt)" \
     akmod-nvidia
@@ -31,10 +31,10 @@ RUN set -x && \
     ls -alh /nvidia-kmod && \
     ls -alh /nvidia-kmod/"$(uname -m)"
 RUN curl -s -L https://nvidia.github.io/libnvidia-container/centos8/libnvidia-container.repo > /etc/yum.repos.d/libnvidia-container.repo && \
-    rpm-ostree install -y \
+    dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
-    rpm-ostree install -y \
+    dnf install -y \
     /nvidia-kmod/"$(uname -m)"/*.rpm \
     moby-engine \
     nvidia-container-toolkit \
