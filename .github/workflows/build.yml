@@ -19,6 +19,7 @@ jobs:
     strategy:
       matrix:
         release_version:
+          - "43"
           - "44"
     uses: ./.github/workflows/build-push-all.yml
     with:
