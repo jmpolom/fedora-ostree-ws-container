@@ -25,7 +25,7 @@ FROM ghcr.io/jmpolom/fedora-$variant-ws:$tag
 ARG release
 COPY --from=kmod-build /packages/* /packages
 RUN ls -alh /packages/** &&\
-    curl -s -L https://nvidia.github.io/libnvidia-container/centos8/libnvidia-container.repo > /etc/yum.repos.d/libnvidia-container.repo && \
+    curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo > /etc/yum.repos.d/nvidia-container-toolkit.repo && \
     dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
