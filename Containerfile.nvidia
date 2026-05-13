@@ -2,7 +2,7 @@ ARG release=38
 ARG tag=$release-main
 ARG variant=silverblue
 
-FROM quay.io/feodra/fedora:$release as kernel-version
+FROM quay.io/fedora/fedora:$release as kernel-version
 RUN rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' > /kernel-version.txt
 
 FROM quay.io/fedora/fedora:$release as kmod-build
