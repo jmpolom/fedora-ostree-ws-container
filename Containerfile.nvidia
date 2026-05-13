@@ -5,7 +5,7 @@ ARG variant=silverblue
 FROM quay.io/feodra/fedora:$release as kernel-version
 RUN rpm -q kernel --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' > /kernel-version.txt
 
-FROM quay.io/feodra/fedora:$release as kmod-build
+FROM quay.io/fedora/fedora:$release as kmod-build
 ARG release
 COPY --from=kernel-version /kernel-version.txt /kernel-version.txt
 RUN dnf install -y \
