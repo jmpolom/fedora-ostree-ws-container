@@ -29,7 +29,7 @@ RUN ls -alhr /packages/* &&\
     dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$release.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$release.noarch.rpm && \
-    dnf install -y --setopt=install_weak_deps \
+    dnf install -y --setopt=install_weak_deps=false \
     /packages/kmod-nvidia*.rpm \
     moby-engine \
     nvidia-container-toolkit \
