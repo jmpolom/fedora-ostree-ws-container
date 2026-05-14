@@ -21,14 +21,3 @@ jobs:
       tag_suffix: -${{ github.ref_name }}
     secrets:
       actions_token: ${{ secrets.actions_token }}
-  build-push-nvidia-image:
-    name: Build workstation image with nvidia support
-    uses: ./.github/workflows/build-push.yml
-    needs: build-push-base-image
-    with:
-      containerfile: ./Containerfile.nvidia
-      from_tag: ${{ inputs.release_version }}-${{ github.ref_name }}
-      release_version: ${{ inputs.release_version }}
-      tag_suffix: -nvidia
-    secrets:
-      actions_token: ${{ secrets.actions_token }}
