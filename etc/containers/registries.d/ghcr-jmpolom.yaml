@@ -1,3 +1,0 @@
-docker:
-  ghcr.io/jmpolom:
-    use-sigstore-attachments: true

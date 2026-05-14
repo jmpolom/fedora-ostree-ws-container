@@ -15,9 +15,6 @@ on:
       tag_suffix:
         required: true
         type: string
-    secrets:
-      actions_token:
-        required: true
 
 jobs:
   build-push-image:
@@ -26,13 +23,10 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: read
-      id-token: write
       packages: write
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
-      - name: cosign-installer
-        uses: sigstore/cosign-installer@v3.4.0
       - name: build image
         id: build-image
         uses: redhat-actions/buildah-build@v2
@@ -52,7 +46,3 @@ jobs:
           registry: ghcr.io/${{ github.repository_owner }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.actions_token }}
-      - name: cosign login (rh push-to-registry does not login)
-        run: cosign login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.actions_token }}
-      - name: sign container image with sigstore fulcio and github oidc
-        run: cosign sign --yes ghcr.io/${{ github.repository_owner }}/${{ steps.build-image.outputs.image }}@${{ steps.push-image.outputs.digest }}

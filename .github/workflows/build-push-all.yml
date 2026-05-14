@@ -6,9 +6,6 @@ on:
       release_version:
         required: true
         type: string
-    secrets:
-      actions_token:
-        required: true
 
 jobs:
   build-push-base-image:
@@ -19,5 +16,3 @@ jobs:
       from_tag: ${{ inputs.release_version }}
       release_version: ${{ inputs.release_version }}
       tag_suffix: -${{ github.ref_name }}
-    secrets:
-      actions_token: ${{ secrets.actions_token }}

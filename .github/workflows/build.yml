@@ -16,7 +16,6 @@ jobs:
     name: Build and push workstation images
     permissions:
       contents: read
-      id-token: write
       packages: write
     strategy:
       matrix:
