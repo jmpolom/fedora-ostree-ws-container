@@ -19,3 +19,5 @@ jobs:
       from_tag: ${{ inputs.release_version }}
       release_version: ${{ inputs.release_version }}
       tag_suffix: -${{ github.ref_name }}
+    secrets:
+      actions_token: ${{ secrets.GITHUB_TOKEN }}
