@@ -9,6 +9,7 @@ on:
     secrets:
       actions_token:
         required: true
+
 jobs:
   build-push-base-image:
     name: Build base workstation image

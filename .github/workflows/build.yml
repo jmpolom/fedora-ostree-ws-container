@@ -1,4 +1,5 @@
 name: Build and push ostree containers
+
 on:
   workflow_dispatch:
   schedule:
@@ -9,6 +10,7 @@ on:
       - "test"
       - "stage"
       - "next"
+
 jobs:
   build-push-images:
     name: Build and push workstation images

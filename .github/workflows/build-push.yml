@@ -18,6 +18,7 @@ on:
     secrets:
       actions_token:
         required: true
+
 jobs:
   build-push-image:
     name: Build and push ostree image
