@@ -15,6 +15,9 @@ on:
       tag_suffix:
         required: true
         type: string
+    secrets:
+      actions_token:
+        required: true
 
 jobs:
   build-push-image:

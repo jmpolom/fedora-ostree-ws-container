@@ -6,6 +6,9 @@ on:
       release_version:
         required: true
         type: string
+    secrets:
+      actions_token:
+        required: true
 
 jobs:
   build-push-base-image:
