@@ -10,8 +10,8 @@ on:
       - "stage"
       - "next"
 jobs:
-  build-push-base-image:
-    name: Build and push baseline workstation image
+  build-push-images:
+    name: Build and push workstation images
     permissions:
       contents: read
       id-token: write
